@@ -10,5 +10,5 @@ services:
     container_name: busiafridgeworld-web
     restart: unless-stopped
     ports:
-      - "3010:80"
+      - "3020:80"
     # No service_role in the container — only public anon key (baked at build)
