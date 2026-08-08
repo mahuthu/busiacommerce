@@ -1,0 +1,14 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL}
+        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+    image: busiafridgeworld-web:latest
+    container_name: busiafridgeworld-web
+    restart: unless-stopped
+    ports:
+      - "3010:80"
+    # No service_role in the container — only public anon key (baked at build)

@@ -1,0 +1,117 @@
+.google-rating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.stars {
+  color: var(--sale-badge);
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+}
+
+.stars.small {
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+
+.rating-score {
+  font-weight: 800;
+  color: var(--dark-text);
+  font-size: 1.1rem;
+}
+
+.rating-text {
+  color: var(--secondary-text);
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.testimonial-card {
+  background-color: var(--card-bg);
+  border-radius: var(--radius-md);
+  padding: 30px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-color);
+  transition: transform 0.3s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+
+.testimonial-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.customer-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-right: 15px;
+}
+
+.customer-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.customer-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--dark-text);
+  margin-bottom: 4px;
+}
+
+.google-icon {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  background-color: #EA4335;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.8rem;
+  font-family: Arial, sans-serif;
+}
+
+.testimonial-text {
+  color: var(--secondary-text);
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+@media (max-width: 992px) {
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+}
