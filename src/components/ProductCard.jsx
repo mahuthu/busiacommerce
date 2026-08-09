@@ -26,7 +26,13 @@ const ProductCard = ({ product, isFavourite = false, onToggleFavourite }) => {
       </button>
 
       <div className="product-image-container">
-        <img src={product.image} alt={product.name} className="product-image" />
+        <img
+          src={product.image}
+          alt={`${product.brand} ${product.name}`}
+          className="product-image"
+          loading="lazy"
+          decoding="async"
+        />
       </div>
 
       <div className="product-info">

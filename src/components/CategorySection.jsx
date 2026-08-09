@@ -49,7 +49,13 @@ const CategorySection = ({ products = [], activeCategory = 'All', onSelectCatego
               onClick={() => onSelectCategory?.(category.name)}
             >
               <div className="category-icon-container">
-                <img src={category.icon} alt={category.name} className="category-icon" />
+                <img
+                  src={category.icon}
+                  alt={`${category.name} appliances`}
+                  className="category-icon"
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
               <h3 className="category-name">{category.name}</h3>
               <span className="category-count">{category.count} items</span>

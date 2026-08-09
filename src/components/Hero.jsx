@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade, Navigation, Pagination, Parallax } from 'swiper/modules';
 import { Phone, ShoppingBag } from 'lucide-react';
@@ -8,27 +8,38 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import './Hero.css';
 
+const slides = [
+  {
+    id: 1,
+    image: '/images/store1-hero.webp',
+    fallback: '/images/store1-hero.jpg',
+    title: 'Your Home for Quality Appliances',
+    subtitle: 'Quality Refrigerators, TVs, Washing Machines, Microwaves and more.',
+  },
+  {
+    id: 2,
+    image: '/images/hero4.png',
+    fallback: '/images/hero4.png',
+    title: 'Premium Brands You Trust',
+    subtitle: 'Experience top-tier electronics at unbeatable prices.',
+  },
+  // {
+  //   id: 3,
+  //   image: '/images/van-hero.webp',
+  //   fallback: '/images/van-hero.jpg',
+  //   title: 'Fast & Reliable Delivery',
+  //   subtitle: 'Serving customers across Uganda and Kenya with care.',
+  // },
+];
+
 const Hero = () => {
-  const slides = [
-    {
-      id: 1,
-      image: '/images/store1.png',
-      title: 'Your Home for Quality Appliances',
-      subtitle: 'Quality Refrigerators, TVs, Washing Machines, Microwaves and more.',
-    },
-    {
-      id: 2,
-      image: '/images/store2.png',
-      title: 'Premium Brands You Trust',
-      subtitle: 'Experience top-tier electronics at unbeatable prices.',
-    },
-    {
-      id: 3,
-      image: '/images/van.png',
-      title: 'Fast & Reliable Delivery',
-      subtitle: 'Serving customers across Uganda and Kenya with care.',
-    }
-  ];
+  // Preload remaining slides after first paint
+  useEffect(() => {
+    slides.slice(1).forEach((slide) => {
+      const img = new Image();
+      img.src = slide.image;
+    });
+  }, []);
 
   return (
     <section className="hero-section">
@@ -45,14 +56,24 @@ const Hero = () => {
         pagination={{ clickable: true }}
         className="hero-swiper"
       >
-        {slides.map((slide) => (
+        {slides.map((slide, index) => (
           <SwiperSlide key={slide.id}>
             <div className="hero-slide">
               <div
                 className="hero-bg"
                 style={{ backgroundImage: `url(${slide.image})` }}
                 data-swiper-parallax="20%"
-              ></div>
+              >
+                {index === 0 && (
+                  <img
+                    src={slide.image}
+                    alt=""
+                    className="hero-preload-img"
+                    fetchPriority="high"
+                    decoding="async"
+                  />
+                )}
+              </div>
               <div className="hero-overlay"></div>
 
               <div className="container hero-content">

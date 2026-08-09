@@ -27,7 +27,16 @@
   height: 100%;
   background-size: cover;
   background-position: center;
+  background-color: #0a2540;
   z-index: 1;
+}
+
+.hero-preload-img {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .hero-overlay {
