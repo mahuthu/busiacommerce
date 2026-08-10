@@ -11,7 +11,7 @@ import './Hero.css';
 const slides = [
   {
     id: 1,
-    image: '/images/store1-hero.webp',
+    image: '/images/hero5.png',
     fallback: '/images/store1-hero.jpg',
     title: 'Your Home for Quality Appliances',
     subtitle: 'Quality Refrigerators, TVs, Washing Machines, Microwaves and more.',
