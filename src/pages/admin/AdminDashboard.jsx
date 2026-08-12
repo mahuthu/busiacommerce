@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { LogOut, Pencil, Plus, Search, Trash2, X } from 'lucide-react';
 import { useAuth } from '../../lib/AuthContext';
 import {
-  PRODUCT_CATEGORIES,
   createProduct,
   deleteProduct,
   deleteProductImage,
@@ -11,6 +10,9 @@ import {
   listProducts,
   updateProduct,
   uploadProductImage,
+  listCategories,
+  createCategory,
+  deleteCategory,
 } from '../../lib/productsApi';
 import './Admin.css';
 
@@ -18,7 +20,7 @@ const emptyForm = {
   id: '',
   name: '',
   brand: '',
-  category: PRODUCT_CATEGORIES[0],
+  category: '',
   price: '',
   oldPrice: '',
   discount: 0,
@@ -42,15 +44,23 @@ const AdminDashboard = () => {
   const [saving, setSaving] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
+  const [allCategories, setAllCategories] = useState([]);
+  const [categoriesModalOpen, setCategoriesModalOpen] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [addingCategory, setAddingCategory] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
-      const data = await listProducts();
+      const [data, cats] = await Promise.all([
+        listProducts(),
+        listCategories()
+      ]);
       setProducts(data);
+      setAllCategories(cats);
     } catch (err) {
-      setError(err.message || 'Failed to load products');
+      setError(err.message || 'Failed to load data');
     } finally {
       setLoading(false);
     }
@@ -81,7 +91,7 @@ const AdminDashboard = () => {
     setImagePreview('');
     try {
       const nextId = await getNextProductId();
-      setForm({ ...emptyForm, id: String(nextId), sku: String(nextId) });
+      setForm({ ...emptyForm, category: allCategories[0]?.name || '', id: String(nextId), sku: String(nextId) });
       setFormOpen(true);
     } catch (err) {
       setError(err.message || 'Could not prepare new product');
@@ -112,6 +122,36 @@ const AdminDashboard = () => {
     setFormOpen(false);
     setImageFile(null);
     setImagePreview('');
+  };
+
+  const handleAddCategory = async (e) => {
+    e.preventDefault();
+    if (!newCategoryName.trim()) return;
+    setAddingCategory(true);
+    setError('');
+    try {
+      await createCategory(newCategoryName.trim());
+      setNewCategoryName('');
+      const cats = await listCategories();
+      setAllCategories(cats);
+    } catch (err) {
+      setError(err.message || 'Failed to add category');
+    } finally {
+      setAddingCategory(false);
+    }
+  };
+
+  const handleDeleteCategory = async (cat) => {
+    const ok = window.confirm(`Delete category "${cat.name}"?`);
+    if (!ok) return;
+    setError('');
+    try {
+      await deleteCategory(cat.id);
+      const cats = await listCategories();
+      setAllCategories(cats);
+    } catch (err) {
+      setError(err.message || 'Failed to delete category');
+    }
   };
 
   const handleFileChange = (event) => {
@@ -223,6 +263,9 @@ const AdminDashboard = () => {
             ))}
           </select>
 
+          <button type="button" className="admin-btn ghost" onClick={() => setCategoriesModalOpen(true)}>
+            Manage categories
+          </button>
           <button type="button" className="admin-btn primary" onClick={openCreate}>
             <Plus size={16} />
             Add product
@@ -340,8 +383,8 @@ const AdminDashboard = () => {
                     value={form.category}
                     onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
                   >
-                    {PRODUCT_CATEGORIES.map((cat) => (
-                      <option key={cat} value={cat}>{cat}</option>
+                    {allCategories.map((cat) => (
+                      <option key={cat.id || cat.name} value={cat.name}>{cat.name}</option>
                     ))}
                   </select>
                 </label>
@@ -406,6 +449,64 @@ const AdminDashboard = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {categoriesModalOpen && (
+        <div className="admin-modal-backdrop" onClick={() => setCategoriesModalOpen(false)}>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="admin-modal-header">
+              <h2>Manage Categories</h2>
+              <button type="button" className="admin-icon-btn" onClick={() => setCategoriesModalOpen(false)} aria-label="Close">
+                <X size={18} />
+              </button>
+            </div>
+            
+            <form className="admin-form" onSubmit={handleAddCategory} style={{ marginBottom: '20px' }}>
+              <div className="admin-form-grid" style={{ gridTemplateColumns: '1fr auto', alignItems: 'end' }}>
+                <label className="admin-field">
+                  <span>New category name</span>
+                  <input
+                    type="text"
+                    value={newCategoryName}
+                    onChange={(e) => setNewCategoryName(e.target.value)}
+                    required
+                  />
+                </label>
+                <button type="submit" className="admin-btn primary" disabled={addingCategory}>
+                  {addingCategory ? 'Adding...' : 'Add'}
+                </button>
+              </div>
+            </form>
+
+            <div className="admin-table-wrap">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Category Name</th>
+                    <th style={{ width: '60px' }}></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {allCategories.map((cat) => (
+                    <tr key={cat.id || cat.name}>
+                      <td>{cat.name}</td>
+                      <td className="admin-row-actions">
+                        <button type="button" className="admin-icon-btn danger" onClick={() => handleDeleteCategory(cat)} aria-label="Delete">
+                          <Trash2 size={16} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                  {allCategories.length === 0 && (
+                    <tr>
+                      <td colSpan="2" className="admin-muted">No categories found.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}

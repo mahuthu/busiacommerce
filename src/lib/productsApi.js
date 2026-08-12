@@ -142,6 +142,42 @@ export async function getNextProductId() {
   return maxId + 1;
 }
 
+export async function listCategories() {
+  if (!supabase) {
+    return PRODUCT_CATEGORIES.map((name, i) => ({ id: String(i), name }));
+  }
+
+  const { data, error } = await supabase
+    .from('categories')
+    .select('*')
+    .order('name', { ascending: true });
+
+  if (error || !data?.length) {
+    console.warn('Failed to load categories from Supabase, using fallback:', error?.message);
+    return PRODUCT_CATEGORIES.map((name, i) => ({ id: String(i), name }));
+  }
+
+  return data;
+}
+
+export async function createCategory(name) {
+  const client = ensureClient();
+  const { data, error } = await client
+    .from('categories')
+    .insert({ name })
+    .select('*')
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+export async function deleteCategory(id) {
+  const client = ensureClient();
+  const { error } = await client.from('categories').delete().eq('id', id);
+  if (error) throw error;
+}
+
 export const PRODUCT_CATEGORIES = [
   'Refrigerators',
   'Freezers',

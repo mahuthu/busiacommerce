@@ -2,25 +2,13 @@ import React, { useMemo } from 'react';
 import categoryIcons from '../data/categoryIcons.json';
 import './CategorySection.css';
 
-const CATEGORY_ORDER = [
-  'Refrigerators',
-  'Freezers',
-  'Washing Machines',
-  'Televisions',
-  'Cookers',
-  'Microwaves & Ovens',
-  'Irons',
-  'Blenders & Mixers',
-  'Air Conditioners',
-  'Kitchen Appliances',
-  'Water Dispensers',
-  'Fans',
-  'Juice Dispensers',
-];
+
 
 const CategorySection = ({ products = [], activeCategory = 'All', onSelectCategory }) => {
   const categories = useMemo(() => {
-    return CATEGORY_ORDER
+    const uniqueCategoryNames = Array.from(new Set(products.map(p => p.category))).sort();
+    
+    return uniqueCategoryNames
       .map((name) => {
         const items = products.filter((p) => p.category === name);
         const iconFromProduct = items.find((p) => p.image)?.image;
