@@ -8,7 +8,7 @@ import WhyChooseUs from './components/WhyChooseUs';
 import TopBrands from './components/TopBrands';
 import Testimonials from './components/Testimonials';
 import Footer from './components/Footer';
-import { listProducts } from './lib/productsApi';
+import { listProducts, listCategories } from './lib/productsApi';
 
 const FAVOURITES_KEY = 'bfw-favourites';
 
@@ -25,6 +25,7 @@ const loadFavourites = () => {
 
 function App() {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [productsLoading, setProductsLoading] = useState(true);
   const [productsError, setProductsError] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
@@ -36,8 +37,14 @@ function App() {
     let mounted = true;
     (async () => {
       try {
-        const data = await listProducts();
-        if (mounted) setProducts(data);
+        const [data, cats] = await Promise.all([
+          listProducts(),
+          listCategories()
+        ]);
+        if (mounted) {
+          setProducts(data);
+          setCategories(cats);
+        }
       } catch (err) {
         if (mounted) setProductsError(err.message || 'Failed to load products');
       } finally {
@@ -111,6 +118,7 @@ function App() {
         <Hero />
         <CategorySection
           products={products}
+          categories={categories}
           activeCategory={activeCategory}
           onSelectCategory={handleCategorySelect}
         />
@@ -121,6 +129,7 @@ function App() {
         )}
         <ProductGrid
           products={products}
+          categories={categories}
           loading={productsLoading}
           activeCategory={activeCategory}
           onSelectCategory={setActiveCategory}

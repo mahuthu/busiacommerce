@@ -160,16 +160,35 @@ export async function listCategories() {
   return data;
 }
 
-export async function createCategory(name) {
+export async function createCategory(name, imageUrl = null) {
   const client = ensureClient();
   const { data, error } = await client
     .from('categories')
-    .insert({ name })
+    .insert({ name, image: imageUrl })
     .select('*')
     .single();
 
   if (error) throw error;
   return data;
+}
+
+export async function uploadCategoryImage(file, categoryName) {
+  const client = ensureClient();
+  const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+  // Use a safe name for the file path
+  const safeName = categoryName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const path = `category-${safeName}-${Date.now()}.${ext}`;
+
+  const { error } = await client.storage.from(BUCKET).upload(path, file, {
+    cacheControl: '3600',
+    upsert: true,
+    contentType: file.type || undefined,
+  });
+
+  if (error) throw error;
+
+  const { data } = client.storage.from(BUCKET).getPublicUrl(path);
+  return data.publicUrl;
 }
 
 export async function deleteCategory(id) {

@@ -4,6 +4,7 @@ import './ProductGrid.css';
 
 const ProductGrid = ({
   products = [],
+  categories = [],
   loading = false,
   activeCategory,
   onSelectCategory,
@@ -17,15 +18,22 @@ const ProductGrid = ({
   const favouriteSet = useMemo(() => new Set(favourites), [favourites]);
   const query = searchQuery.trim().toLowerCase();
 
-  const categories = useMemo(() => {
+  const displayCategories = useMemo(() => {
+    // Calculate counts for all products
     const counts = products.reduce((acc, product) => {
       acc[product.category] = (acc[product.category] || 0) + 1;
       return acc;
     }, {});
-    return Object.entries(counts)
-      .sort((a, b) => b[1] - a[1])
-      .map(([name, count]) => ({ name, count }));
-  }, [products]);
+
+    // If categories prop is empty, fallback to extracting from products
+    const catList = categories.length > 0 
+      ? categories.map(c => c.name) 
+      : Object.keys(counts);
+
+    return catList
+      .map((name) => ({ name, count: counts[name] || 0 }))
+      .sort((a, b) => b.count - a.count);
+  }, [products, categories]);
 
   const filtered = useMemo(() => {
     return products.filter((product) => {
@@ -80,7 +88,7 @@ const ProductGrid = ({
             >
               All ({products.length})
             </button>
-            {categories.map(({ name, count }) => (
+            {displayCategories.map(({ name, count }) => (
               <button
                 key={name}
                 type="button"

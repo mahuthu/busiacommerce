@@ -4,22 +4,23 @@ import './CategorySection.css';
 
 
 
-const CategorySection = ({ products = [], activeCategory = 'All', onSelectCategory }) => {
-  const categories = useMemo(() => {
-    const uniqueCategoryNames = Array.from(new Set(products.map(p => p.category))).sort();
-    
-    return uniqueCategoryNames
-      .map((name) => {
-        const items = products.filter((p) => p.category === name);
-        const iconFromProduct = items.find((p) => p.image)?.image;
-        return {
-          name,
-          count: items.length,
-          icon: categoryIcons[name] || iconFromProduct || '/images/product_display.png',
-        };
-      })
-      .filter((category) => category.count > 0);
-  }, [products]);
+const CategorySection = ({ products = [], categories = [], activeCategory = 'All', onSelectCategory }) => {
+  const displayCategories = useMemo(() => {
+    // If categories prop is empty (e.g. still loading), we can fallback to extracting from products
+    const catList = categories.length > 0 
+      ? categories 
+      : Array.from(new Set(products.map(p => p.category))).map(name => ({ name }));
+
+    return catList.map((cat) => {
+      const items = products.filter((p) => p.category === cat.name);
+      const iconFromProduct = items.find((p) => p.image)?.image;
+      return {
+        name: cat.name,
+        count: items.length,
+        icon: cat.image || categoryIcons[cat.name] || iconFromProduct || '/images/product_display.png',
+      };
+    });
+  }, [products, categories]);
 
   return (
     <section className="section bg-white" id="categories">
@@ -29,7 +30,7 @@ const CategorySection = ({ products = [], activeCategory = 'All', onSelectCatego
         </div>
 
         <div className="category-grid">
-          {categories.map((category) => (
+          {displayCategories.map((category) => (
             <button
               type="button"
               key={category.name}

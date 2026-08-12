@@ -13,6 +13,7 @@ import {
   listCategories,
   createCategory,
   deleteCategory,
+  uploadCategoryImage,
 } from '../../lib/productsApi';
 import './Admin.css';
 
@@ -48,6 +49,8 @@ const AdminDashboard = () => {
   const [categoriesModalOpen, setCategoriesModalOpen] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [addingCategory, setAddingCategory] = useState(false);
+  const [categoryImageFile, setCategoryImageFile] = useState(null);
+  const [categoryImagePreview, setCategoryImagePreview] = useState('');
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -130,8 +133,17 @@ const AdminDashboard = () => {
     setAddingCategory(true);
     setError('');
     try {
-      await createCategory(newCategoryName.trim());
+      let imageUrl = null;
+      if (categoryImageFile) {
+        imageUrl = await uploadCategoryImage(categoryImageFile, newCategoryName.trim());
+      }
+      
+      await createCategory(newCategoryName.trim(), imageUrl);
+      
       setNewCategoryName('');
+      setCategoryImageFile(null);
+      setCategoryImagePreview('');
+      
       const cats = await listCategories();
       setAllCategories(cats);
     } catch (err) {
@@ -159,6 +171,13 @@ const AdminDashboard = () => {
     if (!file) return;
     setImageFile(file);
     setImagePreview(URL.createObjectURL(file));
+  };
+
+  const handleCategoryFileChange = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setCategoryImageFile(file);
+    setCategoryImagePreview(URL.createObjectURL(file));
   };
 
   const handleSave = async (event) => {
@@ -464,7 +483,7 @@ const AdminDashboard = () => {
             </div>
             
             <form className="admin-form" onSubmit={handleAddCategory} style={{ marginBottom: '20px' }}>
-              <div className="admin-form-grid" style={{ gridTemplateColumns: '1fr auto', alignItems: 'end' }}>
+              <div className="admin-form-grid" style={{ gridTemplateColumns: '1fr 1fr auto', alignItems: 'end' }}>
                 <label className="admin-field">
                   <span>New category name</span>
                   <input
@@ -474,16 +493,33 @@ const AdminDashboard = () => {
                     required
                   />
                 </label>
+                <label className="admin-field">
+                  <span>Category image (optional)</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleCategoryFileChange}
+                    ref={(ref) => {
+                      if (ref && !categoryImageFile) ref.value = '';
+                    }}
+                  />
+                </label>
                 <button type="submit" className="admin-btn primary" disabled={addingCategory}>
                   {addingCategory ? 'Adding...' : 'Add'}
                 </button>
               </div>
+              {categoryImagePreview && (
+                <div className="admin-image-preview" style={{ marginTop: '10px', maxWidth: '100px' }}>
+                  <img src={categoryImagePreview} alt="Category preview" />
+                </div>
+              )}
             </form>
 
             <div className="admin-table-wrap">
               <table className="admin-table">
                 <thead>
                   <tr>
+                    <th style={{ width: '50px' }}>Image</th>
                     <th>Category Name</th>
                     <th style={{ width: '60px' }}></th>
                   </tr>
@@ -491,6 +527,13 @@ const AdminDashboard = () => {
                 <tbody>
                   {allCategories.map((cat) => (
                     <tr key={cat.id || cat.name}>
+                      <td>
+                        {cat.image ? (
+                          <img src={cat.image} alt="" className="admin-thumb" style={{ width: '40px', height: '40px' }} />
+                        ) : (
+                          <div style={{ width: '40px', height: '40px', backgroundColor: '#f3f4f6', borderRadius: '4px' }} />
+                        )}
+                      </td>
                       <td>{cat.name}</td>
                       <td className="admin-row-actions">
                         <button type="button" className="admin-icon-btn danger" onClick={() => handleDeleteCategory(cat)} aria-label="Delete">
@@ -501,7 +544,7 @@ const AdminDashboard = () => {
                   ))}
                   {allCategories.length === 0 && (
                     <tr>
-                      <td colSpan="2" className="admin-muted">No categories found.</td>
+                      <td colSpan="3" className="admin-muted">No categories found.</td>
                     </tr>
                   )}
                 </tbody>
