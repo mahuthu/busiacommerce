@@ -12,26 +12,31 @@
 }
 
 .filter-chip {
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   background: var(--card-bg);
-  color: var(--dark-text);
+  color: var(--secondary-text);
   border-radius: 999px;
-  padding: 8px 14px;
-  font-size: 0.85rem;
+  padding: 10px 20px;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
 }
 
 .filter-chip:hover {
-  border-color: var(--primary-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   color: var(--primary-blue);
+  border-color: rgba(11, 94, 215, 0.2);
 }
 
 .filter-chip.active {
   background: var(--primary-blue);
   border-color: var(--primary-blue);
   color: white;
+  box-shadow: 0 8px 25px rgba(11, 94, 215, 0.3);
+  transform: translateY(-2px);
 }
 
 .products-empty {
@@ -58,25 +63,38 @@
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 24px;
-  padding: 12px 16px;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
+  padding: 14px 20px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,1) 100%);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-lg);
   color: var(--secondary-text);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(10px);
 }
 
 .search-active-bar strong {
-  color: var(--dark-text);
+  color: var(--primary-blue);
+  font-weight: 700;
 }
 
 .search-active-bar button {
   border: none;
-  background: none;
+  background: rgba(11, 94, 215, 0.1);
+  padding: 6px 12px;
+  border-radius: 999px;
   color: var(--primary-blue);
   font-weight: 600;
+  font-size: 0.85rem;
   cursor: pointer;
   white-space: nowrap;
+  transition: all 0.3s;
+}
+
+.search-active-bar button:hover {
+  background: var(--primary-blue);
+  color: white;
+  transform: scale(1.05);
 }
 
 @media (max-width: 1024px) {

@@ -4,12 +4,21 @@
   left: 0;
   width: 100%;
   z-index: 1000;
-  background: white;
-  transition: all 0.3s ease;
+  /* Transparent glass over the light hero */
+  background: rgba(238, 244, 255, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(147, 197, 253, 0.2);
+  transition: background 0.4s ease, box-shadow 0.4s ease,
+              border-color 0.4s ease, backdrop-filter 0.4s ease;
 }
 
 .header.scrolled {
-  box-shadow: var(--shadow-header);
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 24px rgba(0, 0, 0, 0.1);
 }
 
 .header.scrolled .top-bar {
@@ -21,12 +30,19 @@
 
 /* Top Bar */
 .top-bar {
-  background-color: var(--primary-blue);
-  color: white;
+  background-color: rgba(29, 78, 216, 0.88);  /* blue, slightly transparent */
+  color: rgba(255, 255, 255, 0.92);
   font-size: 0.85rem;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
   height: 36px;
   overflow: hidden;
+  backdrop-filter: blur(6px);
+}
+
+.header.scrolled .top-bar {
+  background-color: var(--primary-blue);
+  color: white;
+  backdrop-filter: none;
 }
 
 .top-bar-inner {
@@ -66,7 +82,7 @@
 /* Main Navigation */
 .main-nav {
   padding: 15px 0;
-  background-color: white;
+  background-color: transparent;
 }
 
 .header.scrolled .main-nav {
@@ -146,7 +162,7 @@
 
 .action-icon {
   position: relative;
-  color: var(--dark-text);
+  color: #1e3a6e;            /* dark blue — readable on light bg */
   transition: color 0.2s;
   display: flex;
   align-items: center;
@@ -157,11 +173,23 @@
   font: inherit;
 }
 
+.header.scrolled .action-icon {
+  color: var(--dark-text);
+}
+
 .action-icon:hover {
+  color: #2563eb;
+}
+
+.header.scrolled .action-icon:hover {
   color: var(--primary-blue);
 }
 
 .action-icon.active {
+  color: var(--accent-red);
+}
+
+.header.scrolled .action-icon.active {
   color: var(--accent-red);
 }
 
@@ -183,6 +211,14 @@
 
 .mobile-menu-btn {
   display: none;
+  color: #1e3a6e;           /* dark blue on light hero */
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+.header.scrolled .mobile-menu-btn {
   color: var(--dark-text);
 }
 

@@ -1,102 +1,148 @@
-import React, { useEffect } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, EffectFade, Navigation, Pagination, Parallax } from 'swiper/modules';
-import { Phone, ShoppingBag } from 'lucide-react';
-import 'swiper/css';
-import 'swiper/css/effect-fade';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import React, { useState, useEffect } from 'react';
+import { Phone, ShoppingBag, Star, Truck, Shield, Zap, ArrowRight } from 'lucide-react';
 import './Hero.css';
 
-const slides = [
-  {
-    id: 1,
-    image: '/images/hero5-og.jpg',
-    fallback: '/images/store1-hero.jpg',
-    title: 'Your Home for Quality Appliances',
-    subtitle: 'Quality Refrigerators, TVs, Washing Machines, Microwaves and more.',
-  },
-  {
-    id: 2,
-    image: '/images/hero4.png',
-    fallback: '/images/hero4.png',
-    title: 'Premium Brands You Trust',
-    subtitle: 'Experience top-tier electronics at unbeatable prices.',
-  },
-  // {
-  //   id: 3,
-  //   image: '/images/van-hero.webp',
-  //   fallback: '/images/van-hero.jpg',
-  //   title: 'Fast & Reliable Delivery',
-  //   subtitle: 'Serving customers across Uganda and Kenya with care.',
-  // },
+const showcaseImages = [
+  { src: '/images/hero5-og.jpg',    label: 'Refrigerators' },
+  { src: '/images/hero4-hero.jpg',  label: 'Electronics'   },
+  { src: '/images/store1-hero.jpg', label: 'Our Store'      },
 ];
 
 const Hero = () => {
-  // Preload remaining slides after first paint
+  const [activeImg, setActiveImg] = useState(0);
+
   useEffect(() => {
-    slides.slice(1).forEach((slide) => {
-      const img = new Image();
-      img.src = slide.image;
-    });
+    const t = setInterval(
+      () => setActiveImg(p => (p + 1) % showcaseImages.length),
+      4000
+    );
+    return () => clearInterval(t);
   }, []);
 
   return (
     <section className="hero-section">
-      <Swiper
-        modules={[Autoplay, EffectFade, Navigation, Pagination, Parallax]}
-        effect="fade"
-        speed={1000}
-        parallax={true}
-        autoplay={{
-          delay: 5000,
-          disableOnInteraction: false,
-        }}
-        navigation
-        pagination={{ clickable: true }}
-        className="hero-swiper"
-      >
-        {slides.map((slide, index) => (
-          <SwiperSlide key={slide.id}>
-            <div className="hero-slide">
-              <div
-                className="hero-bg"
-                style={{ backgroundImage: `url(${slide.image})` }}
-                data-swiper-parallax="20%"
-              >
-                {index === 0 && (
-                  <img
-                    src={slide.image}
-                    alt=""
-                    className="hero-preload-img"
-                    fetchPriority="high"
-                    decoding="async"
-                  />
-                )}
-              </div>
-              <div className="hero-overlay"></div>
+      {/* ── Background layers ── */}
+      <div className="hero-bg-grid"   aria-hidden="true" />
+      <div className="hero-bg-radial" aria-hidden="true" />
+      <div className="hero-blob hero-blob--1" aria-hidden="true" />
+      <div className="hero-blob hero-blob--2" aria-hidden="true" />
+      <div className="hero-blob hero-blob--3" aria-hidden="true" />
 
-              <div className="container hero-content">
-                <div className="hero-text-container" data-swiper-parallax="-300">
-                  <h1 className="hero-title">{slide.title}</h1>
-                  <p className="hero-subtitle">{slide.subtitle}</p>
+      <div className="hero-inner">
 
-                  <div className="hero-buttons">
-                    <a href="#products" className="btn btn-primary">
-                      <ShoppingBag size={20} />
-                      <span>Browse Products</span>
-                    </a>
-                    <a href="https://wa.me/256774182151" className="btn btn-whatsapp">
-                      <Phone size={20} />
-                      <span>Chat on WhatsApp</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
+        {/* ══ LEFT — Text content ══ */}
+        <div className="hero-left">
+
+          {/* Badge */}
+          <div className="hero-badge">
+            <Star size={13} fill="#f59e0b" color="#f59e0b" />
+            <span>Uganda &amp; Kenya's #1 Appliance Store</span>
+          </div>
+
+          {/* Headline */}
+          <h1 className="hero-heading">
+            <span className="hero-line">Your Home for</span>
+            <span className="hero-line hero-line--accent">Quality Appliances</span>
+            <span className="hero-line">Delivered to You</span>
+          </h1>
+
+          {/* Description */}
+          <p className="hero-description">
+            Premium refrigerators, TVs, washing machines &amp; more — at unbeatable prices.
+            Serving Busia and beyond, every day of the week.
+          </p>
+
+          {/* Trust chips */}
+          <div className="hero-chips">
+            <div className="hero-chip"><Truck  size={14} /><span>Fast Delivery</span></div>
+            <div className="hero-chip"><Shield size={14} /><span>Warranty Assured</span></div>
+            <div className="hero-chip"><Zap    size={14} /><span>Top Brands</span></div>
+          </div>
+
+          {/* CTAs */}
+          <div className="hero-cta-group">
+            <a href="#products" className="hero-btn hero-btn--primary">
+              <ShoppingBag size={19} />
+              <span>Browse Products</span>
+            </a>
+            <a href="https://wa.me/256774182151" className="hero-btn hero-btn--ghost">
+              <Phone size={18} />
+              <span>Chat on WhatsApp</span>
+              <ArrowRight size={16} />
+            </a>
+          </div>
+        </div>
+
+        {/* ══ RIGHT — Image + floating cards ══ */}
+        <div className="hero-right">
+
+          {/* Main cycling image */}
+          <div className="hero-img-wrap">
+            {showcaseImages.map((img, i) => (
+              <img
+                key={img.src}
+                src={img.src}
+                alt={img.label}
+                className={`hero-img ${i === activeImg ? 'hero-img--active' : ''}`}
+                fetchPriority={i === 0 ? 'high' : undefined}
+                decoding="async"
+              />
+            ))}
+
+            {/* Category label */}
+            <div className="hero-img-label">{showcaseImages[activeImg].label}</div>
+
+            {/* Dot nav */}
+            <div className="hero-img-dots">
+              {showcaseImages.map((_, i) => (
+                <button
+                  key={i}
+                  className={`hero-dot ${i === activeImg ? 'hero-dot--active' : ''}`}
+                  onClick={() => setActiveImg(i)}
+                  aria-label={`View ${showcaseImages[i].label}`}
+                />
+              ))}
             </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+          </div>
+
+          {/* Float card — delivery */}
+          <div className="hero-float-card hero-float-card--delivery">
+            <div className="hero-float-icon-wrap"><Truck size={20} /></div>
+            <div>
+              <div className="hero-float-title">Free Delivery</div>
+              <div className="hero-float-sub">Busia &amp; surroundings</div>
+            </div>
+          </div>
+
+          {/* Float card — rating */}
+          <div className="hero-float-card hero-float-card--rating">
+            <div className="hero-float-stars">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} size={12} fill="#f59e0b" stroke="none" />
+              ))}
+            </div>
+            <div className="hero-float-title">4.9 / 5</div>
+            <div className="hero-float-sub">500+ happy customers</div>
+          </div>
+
+          {/* Float card — open */}
+          <div className="hero-float-card hero-float-card--open">
+            <div className="hero-float-dot" />
+            <div>
+              <div className="hero-float-title">Open Today</div>
+              <div className="hero-float-sub">Mon – Sun</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Bottom wave */}
+      <div className="hero-wave" aria-hidden="true">
+        <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <path d="M0,30 C480,70 960,0 1440,30 L1440,60 L0,60 Z" fill="var(--wave-fill,#f8fafc)" />
+        </svg>
+      </div>
     </section>
   );
 };
