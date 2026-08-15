@@ -1,0 +1,128 @@
+.location-section {
+  padding: 80px 0;
+  background-color: var(--light-bg);
+}
+
+.location-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  background-color: white;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  margin-top: 40px;
+}
+
+.location-map-card {
+  width: 100%;
+  min-height: 400px;
+  background-color: #e5e7eb;
+}
+
+.location-info-card {
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.location-info-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--dark-text);
+  margin-bottom: 30px;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.location-info-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background-color: var(--primary-blue);
+  border-radius: 3px;
+}
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin-bottom: 40px;
+  flex-grow: 1;
+}
+
+.info-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.info-icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(11, 94, 215, 0.1);
+  color: var(--primary-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.info-value {
+  font-size: 1rem;
+  color: var(--dark-text);
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.location-actions {
+  margin-top: auto;
+}
+
+.btn-full {
+  width: 100%;
+  justify-content: center;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .location-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .location-map-card {
+    min-height: 350px;
+  }
+}
+
+@media (max-width: 576px) {
+  .location-section {
+    padding: 60px 0;
+  }
+  
+  .location-map-card {
+    min-height: 250px;
+  }
+
+  .location-info-card {
+    padding: 30px 20px;
+  }
+}

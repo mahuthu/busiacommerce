@@ -7,6 +7,7 @@ import PromotionBanner from './components/PromotionBanner';
 import WhyChooseUs from './components/WhyChooseUs';
 import TopBrands from './components/TopBrands';
 import Testimonials from './components/Testimonials';
+import StoreLocation from './components/StoreLocation';
 import Footer from './components/Footer';
 import { listProducts, listCategories } from './lib/productsApi';
 
@@ -148,6 +149,7 @@ function App() {
         <WhyChooseUs />
         <TopBrands />
         <Testimonials />
+        <StoreLocation />
       </main>
       <Footer />
 
