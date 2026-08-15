@@ -3,9 +3,12 @@ import { Phone, ShoppingBag, Star, Truck, Shield, Zap, ArrowRight } from 'lucide
 import './Hero.css';
 
 const showcaseImages = [
-  { src: '/images/hero5-og.jpg',    label: 'Refrigerators' },
-  { src: '/images/hero4-hero.jpg',  label: 'Electronics'   },
-  { src: '/images/store1-hero.jpg', label: 'Our Store'      },
+  { src: '/images/hero5-og.jpg', label: 'Refrigerators' },
+  { src: '/images/catalog/blackark-deep-freezer-002-200l.jpeg', label: 'Freezers' },
+  { src: '/images/catalog/spj-air-conditioner-900btu.jpeg', label: 'Air Conditioners' },
+  { src: '/images/catalog/spj-standing-cooker-3-1-50x50.jpeg', label: 'Cookers' },
+  { src: '/images/catalog/spj-full-automatic-6kg-washung-machhine.jpeg', label: 'Washing Machines' },
+  { src: '/images/van3.png', label: 'Delivery' },
 ];
 
 const Hero = () => {
@@ -22,7 +25,7 @@ const Hero = () => {
   return (
     <section className="hero-section">
       {/* ── Background layers ── */}
-      <div className="hero-bg-grid"   aria-hidden="true" />
+      <div className="hero-bg-grid" aria-hidden="true" />
       <div className="hero-bg-radial" aria-hidden="true" />
       <div className="hero-blob hero-blob--1" aria-hidden="true" />
       <div className="hero-blob hero-blob--2" aria-hidden="true" />
@@ -43,7 +46,7 @@ const Hero = () => {
           <h1 className="hero-heading">
             <span className="hero-line">Your Home for</span>
             <span className="hero-line hero-line--accent">Quality Appliances</span>
-            <span className="hero-line">Delivered to You</span>
+            {/* <span className="hero-line">Delivered to You</span> */}
           </h1>
 
           {/* Description */}
@@ -54,9 +57,9 @@ const Hero = () => {
 
           {/* Trust chips */}
           <div className="hero-chips">
-            <div className="hero-chip"><Truck  size={14} /><span>Fast Delivery</span></div>
+            <div className="hero-chip"><Truck size={14} /><span>Fast Delivery</span></div>
             <div className="hero-chip"><Shield size={14} /><span>Warranty Assured</span></div>
-            <div className="hero-chip"><Zap    size={14} /><span>Top Brands</span></div>
+            <div className="hero-chip"><Zap size={14} /><span>Top Brands</span></div>
           </div>
 
           {/* CTAs */}
